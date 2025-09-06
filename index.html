@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>From Rock Bottom - Transformation Planner</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        // Your Rock Bottom Planner code will go here
+        const App = () => {
+            return <div style={{padding: '20px', textAlign: 'center'}}>
+                <h1 style={{color: '#06b6d4'}}>From Rock Bottom</h1>
+                <p>Your transformation planner is loading...</p>
+                <p>Powered by Hallstate</p>
+            </div>
+        };
+        
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
