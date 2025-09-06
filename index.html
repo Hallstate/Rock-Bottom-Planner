@@ -1,28 +1,778 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>From Rock Bottom - Transformation Planner</title>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: #f9fafb;
+            line-height: 1.6;
+        }
+        .header {
+            background: linear-gradient(to right, #000000, #1f2937);
+            color: white;
+            padding: 12px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #06b6d4;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: #06b6d4;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: black;
+            font-size: 18px;
+        }
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+        .brand-name {
+            color: #06b6d4;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .brand-tagline {
+            font-size: 12px;
+            color: #d1d5db;
+        }
+        .datetime {
+            font-size: 12px;
+            font-family: monospace;
+            background: rgba(0,0,0,0.3);
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(6,182,212,0.3);
+        }
+        .nav {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            overflow-x: auto;
+            padding: 0 16px;
+        }
+        .nav-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 8px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            border-bottom: 2px solid transparent;
+            color: #6b7280;
+            transition: all 0.2s;
+        }
+        .nav-button:hover {
+            color: #06b6d4;
+        }
+        .nav-button.active {
+            color: #06b6d4;
+            border-bottom-color: #06b6d4;
+        }
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 16px;
+        }
+        .hero {
+            background: linear-gradient(to right, #000000, #1f2937);
+            color: white;
+            padding: 32px;
+            border-radius: 12px;
+            border: 2px solid #06b6d4;
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #06b6d4;
+            margin-bottom: 8px;
+        }
+        .hero p {
+            color: #d1d5db;
+            margin-bottom: 16px;
+        }
+        .progress-container {
+            background: rgba(6,182,212,0.2);
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid rgba(6,182,212,0.3);
+        }
+        .progress-bar {
+            background: rgba(0,0,0,0.3);
+            border-radius: 9999px;
+            height: 12px;
+            margin-top: 8px;
+        }
+        .progress-fill {
+            background: #06b6d4;
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 0.5s ease;
+        }
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .grid {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+        .input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .input:focus {
+            outline: none;
+            border-color: #06b6d4;
+        }
+        .textarea {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: none;
+            height: 128px;
+            font-family: Georgia, serif;
+            line-height: 1.6;
+            transition: border-color 0.2s;
+        }
+        .textarea:focus {
+            outline: none;
+            border-color: #06b6d4;
+        }
+        .button {
+            background: #000000;
+            color: #06b6d4;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .button:hover {
+            background: #1f2937;
+        }
+        .button:disabled {
+            background: #d1d5db;
+            color: #9ca3af;
+            cursor: not-allowed;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .checkbox {
+            margin-right: 8px;
+        }
+        .goal-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .hidden { display: none; }
+        .text-center { text-align: center; }
+        .text-sm { font-size: 12px; }
+        .text-gray { color: #6b7280; }
+        .mb-4 { margin-bottom: 16px; }
+        .mt-4 { margin-top: 16px; }
+        @media (max-width: 768px) {
+            .nav-content { padding: 0 8px; }
+            .main { padding: 16px 8px; }
+            .hero { padding: 24px 16px; }
+            .card { padding: 16px; }
+        }
     </style>
 </head>
 <body>
     <div id="root"></div>
+    
     <script type="text/babel">
-        // Your Rock Bottom Planner code will go here
-        const App = () => {
-            return <div style={{padding: '20px', textAlign: 'center'}}>
-                <h1 style={{color: '#06b6d4'}}>From Rock Bottom</h1>
-                <p>Your transformation planner is loading...</p>
-                <p>Powered by Hallstate</p>
-            </div>
+        const { useState, useEffect, useCallback } = React;
+
+        const RockBottomPlanner = () => {
+            const [activeTab, setActiveTab] = useState('dashboard');
+            const [currentDate, setCurrentDate] = useState(new Date().toISOString().split('T')[0]);
+            const [currentDateTime, setCurrentDateTime] = useState(new Date());
+            
+            // Load data from localStorage
+            const loadData = (key, defaultValue) => {
+                try {
+                    const saved = localStorage.getItem(key);
+                    return saved ? JSON.parse(saved) : defaultValue;
+                } catch {
+                    return defaultValue;
+                }
+            };
+
+            // Save data to localStorage
+            const saveData = (key, data) => {
+                try {
+                    localStorage.setItem(key, JSON.stringify(data));
+                } catch (error) {
+                    console.error('Failed to save data:', error);
+                }
+            };
+
+            // State management
+            const [goals, setGoals] = useState(() => loadData('goals', {
+                diabetes: { goal: '', progress: 0 },
+                fitness: { goal: '', progress: 0 },
+                habits: { goal: '', progress: 0 },
+                finance: { goal: '', progress: 0 },
+                business: { goal: '', progress: 0 }
+            }));
+            
+            const [journalEntries, setJournalEntries] = useState(() => loadData('journalEntries', {}));
+            const [dailyPlan, setDailyPlan] = useState(() => loadData('dailyPlan', { priorities: [] }));
+            const [quickNotes, setQuickNotes] = useState(() => loadData('quickNotes', ''));
+            const [morningRoutine, setMorningRoutine] = useState(() => loadData('morningRoutine', {
+                intentions: '',
+                gratitude: ['', '', ''],
+                completedHabits: [],
+                affirmation: 'I am rising from rock bottom and creating positive change.'
+            }));
+
+            // Save data when state changes
+            useEffect(() => { saveData('goals', goals); }, [goals]);
+            useEffect(() => { saveData('journalEntries', journalEntries); }, [journalEntries]);
+            useEffect(() => { saveData('dailyPlan', dailyPlan); }, [dailyPlan]);
+            useEffect(() => { saveData('quickNotes', quickNotes); }, [quickNotes]);
+            useEffect(() => { saveData('morningRoutine', morningRoutine); }, [morningRoutine]);
+
+            // Update time every minute
+            useEffect(() => {
+                const timer = setInterval(() => setCurrentDateTime(new Date()), 60000);
+                return () => clearInterval(timer);
+            }, []);
+
+            // Domain configurations
+            const domains = [
+                { id: 'diabetes', name: 'Diabetes Management', color: '#f97316' },
+                { id: 'fitness', name: 'Fitness & Energy', color: '#ef4444' },
+                { id: 'habits', name: 'Breaking Bad Habits', color: '#8b5cf6' },
+                { id: 'finance', name: 'Finance', color: '#10b981' },
+                { id: 'business', name: 'Ecommerce Business', color: '#3b82f6' }
+            ];
+
+            // Calculate overall progress
+            const calculateOverallProgress = () => {
+                const progresses = Object.values(goals).map(goal => goal.progress || 0);
+                return Math.round(progresses.reduce((sum, p) => sum + p, 0) / progresses.length);
+            };
+
+            // Dashboard View
+            const DashboardView = () => {
+                const overallProgress = calculateOverallProgress();
+                const totalEntries = Object.keys(journalEntries).length;
+                const completedGoals = dailyPlan.priorities.filter(p => p.completed).length;
+                const totalGoals = dailyPlan.priorities.length;
+
+                return (
+                    <div>
+                        <div className="hero">
+                            <h1>From Rock Bottom</h1>
+                            <p>Your journey to transformation - Day 1 of 30</p>
+                            <div className="progress-container">
+                                <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '14px', marginBottom: '8px'}}>
+                                    <span>Overall Progress</span>
+                                    <span>{overallProgress}%</span>
+                                </div>
+                                <div className="progress-bar">
+                                    <div className="progress-fill" style={{width: `${overallProgress}%`}}></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="stats-grid">
+                            <div className="stat-card">
+                                <div className="stat-number">{completedGoals}/{totalGoals}</div>
+                                <div className="stat-label">Goals Hit</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-number">{totalEntries}</div>
+                                <div className="stat-label">Journal Entries</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-number">{morningRoutine.completedHabits.length}</div>
+                                <div className="stat-label">Habits Today</div>
+                            </div>
+                        </div>
+
+                        <div className="card">
+                            <h3 style={{marginBottom: '16px', fontSize: '18px', fontWeight: '600'}}>Quick Notes</h3>
+                            <textarea 
+                                className="textarea"
+                                placeholder="Jot down quick thoughts, reminders, insights..."
+                                value={quickNotes}
+                                onChange={(e) => setQuickNotes(e.target.value)}
+                            />
+                            <div className="text-sm text-gray mt-4">
+                                {quickNotes.length} characters - Use this space for thoughts that don't need structured journal entries
+                            </div>
+                        </div>
+
+                        <div className="grid grid-3">
+                            {domains.map(domain => {
+                                const progress = goals[domain.id]?.progress || 0;
+                                return (
+                                    <div key={domain.id} 
+                                         className="card" 
+                                         style={{cursor: 'pointer', borderLeft: `4px solid ${domain.color}`}}
+                                         onClick={() => setActiveTab(domain.id)}>
+                                        <h3 style={{fontSize: '16px', fontWeight: '600', marginBottom: '12px'}}>{domain.name}</h3>
+                                        <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '8px'}}>
+                                            <span>Progress</span>
+                                            <span>{progress}%</span>
+                                        </div>
+                                        <div style={{background: '#e5e7eb', borderRadius: '9999px', height: '8px'}}>
+                                            <div style={{
+                                                background: domain.color,
+                                                height: '100%',
+                                                borderRadius: '9999px',
+                                                width: `${progress}%`,
+                                                transition: 'width 0.5s ease'
+                                            }}></div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                );
+            };
+
+            // Morning Routine View
+            const MorningRoutineView = () => {
+                const morningHabits = [
+                    'Drink a glass of water',
+                    'Take medications/vitamins', 
+                    'Do 5 minutes of stretching',
+                    'Practice deep breathing',
+                    'Review daily goals',
+                    'Eat a healthy breakfast'
+                ];
+
+                const toggleHabit = (habit) => {
+                    setMorningRoutine(prev => ({
+                        ...prev,
+                        completedHabits: prev.completedHabits.includes(habit)
+                            ? prev.completedHabits.filter(h => h !== habit)
+                            : [...prev.completedHabits, habit]
+                    }));
+                };
+
+                const updateGratitude = (index, value) => {
+                    setMorningRoutine(prev => ({
+                        ...prev,
+                        gratitude: prev.gratitude.map((item, i) => i === index ? value : item)
+                    }));
+                };
+
+                return (
+                    <div>
+                        <div style={{background: 'linear-gradient(to right, #fbbf24, #f97316)', color: 'white', padding: '24px', borderRadius: '12px', marginBottom: '24px'}}>
+                            <h2 style={{fontSize: '28px', fontWeight: 'bold', marginBottom: '8px'}}>Good Morning!</h2>
+                            <p>Start your day with intention and energy</p>
+                        </div>
+
+                        <div className="grid grid-2">
+                            <div className="card">
+                                <h3 style={{fontSize: '18px', fontWeight: '600', marginBottom: '16px'}}>Today's Intentions</h3>
+                                <textarea
+                                    className="textarea"
+                                    placeholder="What do you intend to accomplish today?"
+                                    value={morningRoutine.intentions}
+                                    onChange={(e) => setMorningRoutine(prev => ({...prev, intentions: e.target.value}))}
+                                />
+                            </div>
+
+                            <div className="card">
+                                <h3 style={{fontSize: '18px', fontWeight: '600', marginBottom: '16px'}}>3 Things I'm Grateful For</h3>
+                                {morningRoutine.gratitude.map((item, index) => (
+                                    <input
+                                        key={index}
+                                        className="input"
+                                        style={{marginBottom: '12px'}}
+                                        placeholder={`Gratitude #${index + 1}...`}
+                                        value={item}
+                                        onChange={(e) => updateGratitude(index, e.target.value)}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="card">
+                            <h3 style={{fontSize: '18px', fontWeight: '600', marginBottom: '16px'}}>
+                                Morning Habits ({morningRoutine.completedHabits.length}/{morningHabits.length})
+                            </h3>
+                            {morningHabits.map((habit, index) => (
+                                <div key={index} className="goal-item">
+                                    <input
+                                        type="checkbox"
+                                        className="checkbox"
+                                        checked={morningRoutine.completedHabits.includes(habit)}
+                                        onChange={() => toggleHabit(habit)}
+                                    />
+                                    <span style={{textDecoration: morningRoutine.completedHabits.includes(habit) ? 'line-through' : 'none'}}>
+                                        {habit}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            };
+
+            // Journal View
+            const JournalView = () => {
+                const [currentEntry, setCurrentEntry] = useState('');
+                const [currentPeriod, setCurrentPeriod] = useState('AM');
+                const entryKey = `${currentDate}-${currentPeriod}`;
+
+                useEffect(() => {
+                    setCurrentEntry(journalEntries[entryKey] || '');
+                }, [entryKey, journalEntries]);
+
+                const saveEntry = () => {
+                    setJournalEntries(prev => ({...prev, [entryKey]: currentEntry}));
+                };
+
+                return (
+                    <div>
+                        <div style={{background: '#fef3c7', padding: '24px', borderRadius: '12px', border: '1px solid #f59e0b', marginBottom: '24px'}}>
+                            <h2 style={{fontSize: '28px', fontWeight: 'bold', color: '#92400e', marginBottom: '8px'}}>Journey Journal</h2>
+                            <p style={{color: '#b45309'}}>Document your transformation story, one day at a time</p>
+                        </div>
+
+                        <div className="card">
+                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '16px'}}>
+                                <div style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
+                                    <h3 style={{fontSize: '18px', fontWeight: '600'}}>Today's Entry</h3>
+                                    <select 
+                                        value={currentPeriod}
+                                        onChange={(e) => setCurrentPeriod(e.target.value)}
+                                        style={{padding: '8px', border: '1px solid #e5e7eb', borderRadius: '6px'}}
+                                    >
+                                        <option value="AM">AM</option>
+                                        <option value="PM">PM</option>
+                                    </select>
+                                </div>
+                                <input
+                                    type="date"
+                                    value={currentDate}
+                                    onChange={(e) => setCurrentDate(e.target.value)}
+                                    style={{padding: '8px', border: '1px solid #e5e7eb', borderRadius: '6px'}}
+                                />
+                            </div>
+                            
+                            <textarea
+                                className="textarea"
+                                style={{height: '200px'}}
+                                placeholder={currentPeriod === 'AM' ? 
+                                    "Morning reflection: How are you feeling today? What are your intentions?" :
+                                    "Evening reflection: How did today contribute to your journey from rock bottom?"
+                                }
+                                value={currentEntry}
+                                onChange={(e) => setCurrentEntry(e.target.value)}
+                            />
+                            
+                            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px'}}>
+                                <span className="text-sm text-gray">{currentEntry.length} characters</span>
+                                <button 
+                                    className="button"
+                                    onClick={saveEntry}
+                                    disabled={!currentEntry.trim()}
+                                >
+                                    Save Entry
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            // Planning View
+            const PlanningView = () => {
+                const [newPriority, setNewPriority] = useState('');
+
+                const addPriority = () => {
+                    if (newPriority.trim() && dailyPlan.priorities.length < 3) {
+                        setDailyPlan(prev => ({
+                            ...prev,
+                            priorities: [...prev.priorities, {
+                                id: Date.now(),
+                                task: newPriority.trim(),
+                                completed: false
+                            }]
+                        }));
+                        setNewPriority('');
+                    }
+                };
+
+                const togglePriority = (id) => {
+                    setDailyPlan(prev => ({
+                        ...prev,
+                        priorities: prev.priorities.map(p => 
+                            p.id === id ? {...p, completed: !p.completed} : p
+                        )
+                    }));
+                };
+
+                return (
+                    <div>
+                        <div style={{background: '#e0e7ff', padding: '24px', borderRadius: '12px', border: '1px solid #6366f1', marginBottom: '24px'}}>
+                            <h2 style={{fontSize: '28px', fontWeight: 'bold', color: '#3730a3', marginBottom: '8px'}}>Evening Planning</h2>
+                            <p style={{color: '#4c1d95'}}>Reflect on today and plan tomorrow's path upward</p>
+                        </div>
+
+                        <div className="card">
+                            <h3 style={{fontSize: '18px', fontWeight: '600', marginBottom: '16px'}}>Tomorrow's Top 3 Priorities</h3>
+                            
+                            {dailyPlan.priorities.map((priority, index) => (
+                                <div key={priority.id} className="goal-item">
+                                    <input
+                                        type="checkbox"
+                                        className="checkbox"
+                                        checked={priority.completed}
+                                        onChange={() => togglePriority(priority.id)}
+                                    />
+                                    <div style={{background: '#3b82f6', color: 'white', width: '24px', height: '24px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '600'}}>
+                                        {index + 1}
+                                    </div>
+                                    <span style={{flex: 1, textDecoration: priority.completed ? 'line-through' : 'none'}}>
+                                        {priority.task}
+                                    </span>
+                                </div>
+                            ))}
+
+                            {dailyPlan.priorities.length < 3 && (
+                                <div style={{display: 'flex', gap: '8px', marginTop: '16px'}}>
+                                    <input
+                                        className="input"
+                                        style={{flex: 1}}
+                                        placeholder="Add a priority for tomorrow..."
+                                        value={newPriority}
+                                        onChange={(e) => setNewPriority(e.target.value)}
+                                        onKeyPress={(e) => e.key === 'Enter' && addPriority()}
+                                    />
+                                    <button 
+                                        className="button"
+                                        onClick={addPriority}
+                                        disabled={!newPriority.trim()}
+                                    >
+                                        Add
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                );
+            };
+
+            // Domain View
+            const DomainView = ({ domainId }) => {
+                const domain = domains.find(d => d.id === domainId);
+                const domainGoal = goals[domainId] || { goal: '', progress: 0 };
+
+                const updateGoal = (goal) => {
+                    setGoals(prev => ({...prev, [domainId]: {...prev[domainId], goal}}));
+                };
+
+                const updateProgress = (delta) => {
+                    setGoals(prev => ({
+                        ...prev,
+                        [domainId]: {
+                            ...prev[domainId],
+                            progress: Math.max(0, Math.min(100, (prev[domainId]?.progress || 0) + delta))
+                        }
+                    }));
+                };
+
+                return (
+                    <div>
+                        <div style={{background: '#f3f4f6', padding: '24px', borderRadius: '12px', border: `2px solid ${domain.color}`, marginBottom: '24px'}}>
+                            <h2 style={{fontSize: '28px', fontWeight: 'bold', marginBottom: '8px'}}>{domain.name}</h2>
+                            <p style={{color: '#6b7280'}}>Focus area for your transformation journey</p>
+                        </div>
+
+                        <div className="card">
+                            <h3 style={{fontSize: '18px', fontWeight: '600', marginBottom: '16px'}}>30-Day Goal</h3>
+                            <input
+                                className="input mb-4"
+                                placeholder={`What do you want to achieve in ${domain.name.toLowerCase()} in 30 days?`}
+                                value={domainGoal.goal}
+                                onChange={(e) => updateGoal(e.target.value)}
+                            />
+                            
+                            <div style={{marginBottom: '16px'}}>
+                                <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '14px', marginBottom: '8px'}}>
+                                    <span>Progress</span>
+                                    <span>{domainGoal.progress}%</span>
+                                </div>
+                                <div style={{background: '#e5e7eb', borderRadius: '9999px', height: '12px'}}>
+                                    <div style={{
+                                        background: domain.color,
+                                        height: '100%',
+                                        borderRadius: '9999px',
+                                        width: `${domainGoal.progress}%`,
+                                        transition: 'width 0.5s ease'
+                                    }}></div>
+                                </div>
+                            </div>
+
+                            <div style={{display: 'flex', gap: '8px'}}>
+                                <button 
+                                    className="button"
+                                    style={{background: '#10b981'}}
+                                    onClick={() => updateProgress(5)}
+                                    disabled={domainGoal.progress >= 100}
+                                >
+                                    +5% Progress
+                                </button>
+                                <button 
+                                    className="button"
+                                    style={{background: '#ef4444'}}
+                                    onClick={() => updateProgress(-5)}
+                                    disabled={domainGoal.progress <= 0}
+                                >
+                                    -5% Progress
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            // Navigation items
+            const navItems = [
+                { id: 'dashboard', label: 'Dashboard', icon: '📊' },
+                { id: 'morning', label: 'Morning Routine', icon: '🌅' },
+                { id: 'planning', label: 'Evening Planning', icon: '📋' },
+                { id: 'journal', label: 'Journal', icon: '📖' },
+                ...domains.map(d => ({ id: d.id, label: d.name, icon: '🎯' }))
+            ];
+
+            return (
+                <div>
+                    <header className="header">
+                        <div className="header-content">
+                            <div className="logo-section">
+                                <div className="logo">H</div>
+                                <div className="brand-text">
+                                    <div className="brand-name">HALLSTATE</div>
+                                    <div className="brand-tagline">From Rock Bottom Journey</div>
+                                </div>
+                            </div>
+                            <div className="datetime">
+                                {currentDateTime.toLocaleDateString('en-US', { 
+                                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+                                })} • {currentDateTime.toLocaleTimeString('en-US', { 
+                                    hour: '2-digit', minute: '2-digit', hour12: true 
+                                })}
+                            </div>
+                        </div>
+                    </header>
+
+                    <nav className="nav">
+                        <div className="nav-content">
+                            {navItems.map(item => (
+                                <button
+                                    key={item.id}
+                                    className={`nav-button ${activeTab === item.id ? 'active' : ''}`}
+                                    onClick={() => setActiveTab(item.id)}
+                                >
+                                    <span>{item.icon}</span>
+                                    <span>{item.label}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </nav>
+
+                    <main className="main">
+                        {activeTab === 'dashboard' && <DashboardView />}
+                        {activeTab === 'morning' && <MorningRoutineView />}
+                        {activeTab === 'planning' && <PlanningView />}
+                        {activeTab === 'journal' && <JournalView />}
+                        {domains.some(d => d.id === activeTab) && <DomainView domainId={activeTab} />}
+                    </main>
+                </div>
+            );
         };
-        
-        ReactDOM.render(<App />, document.getElementById('root'));
+
+        ReactDOM.render(<RockBottomPlanner />, document.getElementById('root'));
     </script>
 </body>
 </html>
